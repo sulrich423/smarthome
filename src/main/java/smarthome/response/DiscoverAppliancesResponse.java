@@ -61,7 +61,7 @@ public class DiscoverAppliancesResponse {
       @JsonProperty("version")
       private String version;
 
-      public DiscoveredAppliances(List<String> actions, String applianceId, String friendlyDescription, String friendlyName) {
+      public DiscoveredAppliances(List<String> actions, String applianceId, String friendlyName, String friendlyDescription) {
         this.actions = actions;
         this.applianceId = applianceId;
         this.friendlyDescription = friendlyDescription;
