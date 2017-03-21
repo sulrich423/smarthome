@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import smarthome.service.device.HarmonyAction;
 
 @JsonPropertyOrder(alphabetic = true)
-public class HarmonyPayload {
+public class HarmonyCommandPayload implements Payload {
 
   @JsonProperty("entity_id")
   private String entityId;
@@ -17,7 +17,7 @@ public class HarmonyPayload {
   @JsonProperty("command")
   private String command;
 
-  public HarmonyPayload(HarmonyAction action) {
+  public HarmonyCommandPayload(HarmonyAction action) {
     this.entityId = action.getEntityId();
     this.device = action.getDevice();
     this.command = action.getCommand();
