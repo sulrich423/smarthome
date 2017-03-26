@@ -2,9 +2,9 @@ package smarthome.service.device;
 
 public class HarmonyAction {
 
-  public static final HarmonyAction TV_LIGHT_POWERTOGGLE = new HarmonyAction("remote.Bedroom", "43124579", "PowerToggle");
-  public static final HarmonyAction ACTIVITY_PLAYSTATION = new HarmonyAction("remote.Bedroom", "25273971");
-  public static final HarmonyAction ACTIVITY_TAGESSCHAU = new HarmonyAction("remote.Bedroom", "25267422");
+  public static final HarmonyAction TV_LIGHT_POWERTOGGLE = new HarmonyAction("remote.Livingroom", "43124579", "PowerToggle");
+  public static final HarmonyAction ACTIVITY_PLAYSTATION = new HarmonyAction("remote.Livingroom", "25273971");
+  public static final HarmonyAction ACTIVITY_TAGESSCHAU = new HarmonyAction("remote.Livingroom", "25267422");
 
   private final String entityId;
 
