@@ -3,7 +3,8 @@ package smarthome;
 import smarthome.Action.Domain;
 import smarthome.Action.Service;
 import smarthome.service.device.HarmonyAction;
-import smarthome.service.payload.HarmonyActivityPayload;
+import smarthome.service.payload.HarmonyActivityOffPayload;
+import smarthome.service.payload.HarmonyActivityOnPayload;
 import smarthome.service.payload.HarmonyCommandPayload;
 
 public enum SwitchAction {
@@ -16,11 +17,11 @@ public enum SwitchAction {
   TV_LIGHT(new Action(Domain.REMOTE, Service.SEND_COMMAND, new HarmonyCommandPayload(HarmonyAction.TV_LIGHT_POWERTOGGLE)),
       new Action(Domain.REMOTE, Service.SEND_COMMAND, new HarmonyCommandPayload(HarmonyAction.TV_LIGHT_POWERTOGGLE))), //
 
-  PLAYSTATION(new Action(Domain.REMOTE, Service.TURN_ON, new HarmonyActivityPayload(HarmonyAction.ACTIVITY_PLAYSTATION)),
-      new Action(Domain.REMOTE, Service.TURN_OFF, new HarmonyActivityPayload(HarmonyAction.ACTIVITY_PLAYSTATION))), //
+  PLAYSTATION(new Action(Domain.REMOTE, Service.TURN_ON, new HarmonyActivityOnPayload(HarmonyAction.ACTIVITY_PLAYSTATION)),
+      new Action(Domain.REMOTE, Service.TURN_OFF, new HarmonyActivityOffPayload(HarmonyAction.ACTIVITY_PLAYSTATION))), //
 
-  TAGESSCHAU(new Action(Domain.REMOTE, Service.TURN_ON, new HarmonyActivityPayload(HarmonyAction.ACTIVITY_TAGESSCHAU)),
-      new Action(Domain.REMOTE, Service.TURN_OFF, new HarmonyActivityPayload(HarmonyAction.ACTIVITY_TAGESSCHAU)));
+  TAGESSCHAU(new Action(Domain.REMOTE, Service.TURN_ON, new HarmonyActivityOnPayload(HarmonyAction.ACTIVITY_TAGESSCHAU)),
+      new Action(Domain.REMOTE, Service.TURN_OFF, new HarmonyActivityOffPayload(HarmonyAction.ACTIVITY_TAGESSCHAU)));
 
   private Action onAction;
   private Action offAction;

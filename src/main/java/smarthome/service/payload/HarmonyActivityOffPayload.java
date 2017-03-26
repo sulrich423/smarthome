@@ -6,17 +6,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import smarthome.service.device.HarmonyAction;
 
 @JsonPropertyOrder(alphabetic = true)
-public class HarmonyActivityPayload implements Payload {
+public class HarmonyActivityOffPayload implements Payload {
 
   @JsonProperty("entity_id")
   private String entityId;
 
-  @JsonProperty("activity")
-  private String activity;
-
-  public HarmonyActivityPayload(HarmonyAction action) {
+  public HarmonyActivityOffPayload(HarmonyAction action) {
     this.entityId = action.getEntityId();
-    this.activity = action.getActivity();
   }
 
 }
