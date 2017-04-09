@@ -4,15 +4,11 @@ import smarthome.service.payload.Payload;
 
 public class Action {
 
-  private static final String SERVICE_PREFIX = "https://replaceWithYourServiceUrl.org/api/services/";
-  private static final String PASSWORD_SUFFIX = "?api_password=replaceWithYourPassword";
-  private static final String PATH_SEPARATOR = "/";
-
   private final String url;
   private final Object payload;
 
-  public Action(Domain domain, Service service, Payload payload) {
-    this.url = SERVICE_PREFIX + domain.getKey() + PATH_SEPARATOR + service.getKey() + PASSWORD_SUFFIX;
+  public Action(Domain domain, Payload payload) {
+    this.url = Configuration.BASEURL + domain.getVal();
     this.payload = payload;
   }
 
@@ -25,37 +21,20 @@ public class Action {
   }
 
   public enum Domain {
-    REMOTE("remote"), //
-    SHELL_COMMAND("shell_command");
+    SOCKET("socket"), //
+    HARMONY_COMMAND("harmony_command"), //
+    HARMONY_ACTIVITY_ON("harmony_activity_on"), //
+    HARMONY_ACTIVITY_OFF("harmony_activity_off");
 
-    private String key;
+    private String val;
 
-    private Domain(String key) {
-      this.key = key;
+    private Domain(String val) {
+      this.val = val;
     }
 
-    public String getKey() {
-      return key;
-    }
-  }
-
-  public enum Service {
-    LIGHT_ON("light_on"), //
-    LIGHT_OFF("light_off"), //
-    CABIN_LIGHT_ON("cabin_light_on"), //
-    CABIN_LIGHT_OFF("cabin_light_off"), //
-    SEND_COMMAND("send_command"), //
-    TURN_ON("turn_on"), //
-    TURN_OFF("turn_off");
-
-    private String key;
-
-    private Service(String key) {
-      this.key = key;
-    }
-
-    public String getKey() {
-      return key;
+    public String getVal() {
+      return val;
     }
   }
+
 }

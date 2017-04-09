@@ -18,7 +18,4 @@ public class Devices {
   public static final DiscoveredAppliances PLAYSTATION = new DiscoveredAppliances(SWITCH_ACTIONS, "playstation", "Playstation",
       "Playstation 4");
 
-  public static final DiscoveredAppliances TAGESSCHAU = new DiscoveredAppliances(SWITCH_ACTIONS, "tagesschau", "Tagesschau",
-      "Tagesschau abspielen");
-
 }

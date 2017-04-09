@@ -11,6 +11,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
@@ -34,6 +35,7 @@ public class SmartHomeController implements RequestStreamHandler {
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
     String input = inputStreamToString(inputStream);
     String requestType = determineRequestType(input);
+    System.out.println("requestType: " + requestType);
     switch (requestType) {
     case "DiscoverAppliancesRequest":
       doDiscoverAppliancesResponse(outputStream);
@@ -62,7 +64,7 @@ public class SmartHomeController implements RequestStreamHandler {
   }
 
   private void doTurnOn(String applianceId, OutputStream output) {
-    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).stream()
+    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
         .map(SwitchAction::getOnAction)
         .forEach(this::executeAction);
 
@@ -71,7 +73,7 @@ public class SmartHomeController implements RequestStreamHandler {
   }
 
   private void doTurnOff(String applianceId, OutputStream output) {
-    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).stream()
+    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
         .map(SwitchAction::getOffAction)
         .forEach(this::executeAction);
 
@@ -82,10 +84,11 @@ public class SmartHomeController implements RequestStreamHandler {
   private void executeAction(Action action) {
     ClientBuilder.newClient()
         .register(JacksonJsonProvider.class)
+        .register(HttpAuthenticationFeature.basic(Configuration.USERNAME, Configuration.PASSWORD))
         .target(action.getUrl())
         .request()
         .buildPost(Entity.entity(action.getPayload(), MediaType.APPLICATION_JSON_TYPE))
-        .invoke(String.class);
+        .invoke();
   }
 
   private String inputStreamToString(InputStream inputStream) {

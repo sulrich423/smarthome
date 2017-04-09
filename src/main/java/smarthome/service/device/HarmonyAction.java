@@ -2,11 +2,8 @@ package smarthome.service.device;
 
 public class HarmonyAction {
 
-  public static final HarmonyAction TV_LIGHT_POWERTOGGLE = new HarmonyAction("remote.Livingroom", "43124579", "PowerToggle");
-  public static final HarmonyAction ACTIVITY_PLAYSTATION = new HarmonyAction("remote.Livingroom", "25273971");
-  public static final HarmonyAction ACTIVITY_TAGESSCHAU = new HarmonyAction("remote.Livingroom", "25267422");
-
-  private final String entityId;
+  public static final HarmonyAction TV_LIGHT_POWERTOGGLE = new HarmonyAction("43124579", "PowerToggle");
+  public static final HarmonyAction ACTIVITY_PLAYSTATION = new HarmonyAction("25273971");
 
   private final String device;
 
@@ -14,22 +11,16 @@ public class HarmonyAction {
 
   private final String activity;
 
-  public HarmonyAction(String entityId, String activity) {
-    this.entityId = entityId;
+  public HarmonyAction(String activity) {
     this.activity = activity;
     this.device = null;
     this.command = null;
   }
 
-  public HarmonyAction(String entityId, String device, String command) {
-    this.entityId = entityId;
+  public HarmonyAction(String device, String command) {
     this.device = device;
     this.command = command;
     this.activity = null;
-  }
-
-  public String getEntityId() {
-    return entityId;
   }
 
   public String getDevice() {
