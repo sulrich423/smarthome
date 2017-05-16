@@ -1,10 +1,10 @@
-package smarthome;
+package smarthome.alexa;
 
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import smarthome.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
+import smarthome.alexa.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
 
 public class Devices {
 

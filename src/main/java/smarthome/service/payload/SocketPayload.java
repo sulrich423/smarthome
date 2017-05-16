@@ -3,8 +3,6 @@ package smarthome.service.payload;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import smarthome.service.device.SocketAction;
-
 @JsonPropertyOrder(alphabetic = true)
 public class SocketPayload implements Payload {
 
@@ -14,9 +12,9 @@ public class SocketPayload implements Payload {
   @JsonProperty("command")
   private String command;
 
-  public SocketPayload(SocketAction action) {
-    this.unitCode = action.getUnitCode();
-    this.command = action.getCommand();
+  public SocketPayload(String unitCode, String command) {
+    this.unitCode = unitCode;
+    this.command = command;
   }
 
 }

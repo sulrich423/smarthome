@@ -18,16 +18,18 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
-import smarthome.request.SetPercentageRequest;
-import smarthome.request.TurnOffRequest;
-import smarthome.request.TurnOnRequest;
-import smarthome.request.UnspecifiedRequest;
-import smarthome.response.DiscoverAppliancesResponse;
-import smarthome.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
-import smarthome.response.SetPercentageConfirmation;
-import smarthome.response.TurnOffConfirmation;
-import smarthome.response.TurnOnConfirmation;
-import smarthome.response.TurnOnConfirmation.Payload;
+import smarthome.alexa.request.SetPercentageRequest;
+import smarthome.alexa.request.TurnOffRequest;
+import smarthome.alexa.request.TurnOnRequest;
+import smarthome.alexa.request.UnspecifiedRequest;
+import smarthome.alexa.response.DiscoverAppliancesResponse;
+import smarthome.alexa.response.SetPercentageConfirmation;
+import smarthome.alexa.response.TurnOffConfirmation;
+import smarthome.alexa.response.TurnOnConfirmation;
+import smarthome.alexa.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
+import smarthome.alexa.response.TurnOnConfirmation.Payload;
+import smarthome.service.ServiceCall;
+import smarthome.service.action.Action;
 
 public class SmartHomeController implements RequestStreamHandler {
 
@@ -72,7 +74,7 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void doTurnOn(String applianceId, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
-        .map(AbstractAction::getOnAction)
+        .map(Action::getOnCall)
         .forEach(this::executeAction);
 
     TurnOnConfirmation turnOnConfirmation = new TurnOnConfirmation(new Payload());
@@ -81,7 +83,7 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void doTurnOff(String applianceId, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
-        .map(AbstractAction::getOffAction)
+        .map(Action::getOffCall)
         .forEach(this::executeAction);
 
     TurnOffConfirmation turnOffConfirmation = new TurnOffConfirmation(new TurnOffConfirmation.Payload());
@@ -90,14 +92,14 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void doSetPercentage(String applianceId, double value, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
-        .map(a -> a.getSetPercentageAction(value))
+        .map(a -> a.getSetPercentageCall(value))
         .forEach(this::executeAction);
 
     SetPercentageConfirmation setPercentageConfirmation = new SetPercentageConfirmation(new SetPercentageConfirmation.Payload());
     writeValue(output, setPercentageConfirmation);
   }
 
-  private void executeAction(Action action) {
+  private void executeAction(ServiceCall action) {
     ClientBuilder.newClient()
         .register(JacksonJsonProvider.class)
         .register(HttpAuthenticationFeature.basic(Configuration.USERNAME, Configuration.PASSWORD))

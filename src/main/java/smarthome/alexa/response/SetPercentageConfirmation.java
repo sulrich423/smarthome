@@ -1,12 +1,12 @@
-package smarthome.response;
+package smarthome.alexa.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import smarthome.Header;
+import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
-public class TurnOnConfirmation {
+public class SetPercentageConfirmation {
 
   @JsonProperty("header")
   private Header header;
@@ -14,8 +14,8 @@ public class TurnOnConfirmation {
   @JsonProperty("payload")
   private Payload payload;
 
-  public TurnOnConfirmation(Payload payload) {
-    this.header = new Header("TurnOnConfirmation", "Alexa.ConnectedHome.Control");
+  public SetPercentageConfirmation(Payload payload) {
+    this.header = new Header("SetPercentageConfirmation", "Alexa.ConnectedHome.Control");
     this.payload = payload;
   }
 

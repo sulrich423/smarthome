@@ -1,4 +1,4 @@
-package smarthome;
+package smarthome.alexa;
 
 import java.util.UUID;
 

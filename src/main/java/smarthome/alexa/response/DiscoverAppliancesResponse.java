@@ -1,11 +1,11 @@
-package smarthome.response;
+package smarthome.alexa.response;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import smarthome.Header;
+import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
 public class DiscoverAppliancesResponse {
