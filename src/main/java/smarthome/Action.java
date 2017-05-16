@@ -5,7 +5,7 @@ import smarthome.service.payload.Payload;
 public class Action {
 
   private final String url;
-  private final Object payload;
+  private final Payload payload;
 
   public Action(Domain domain, Payload payload) {
     this.url = Configuration.BASEURL + domain.getVal();
@@ -16,7 +16,7 @@ public class Action {
     return url;
   }
 
-  public Object getPayload() {
+  public Payload getPayload() {
     return payload;
   }
 
@@ -24,7 +24,9 @@ public class Action {
     SOCKET("socket"), //
     HARMONY_COMMAND("harmony_command"), //
     HARMONY_ACTIVITY_ON("harmony_activity_on"), //
-    HARMONY_ACTIVITY_OFF("harmony_activity_off");
+    HARMONY_ACTIVITY_OFF("harmony_activity_off"), //
+    BLIND_WINDOW("move"), //
+    BLIND_PATIO("homematic");
 
     private String val;
 

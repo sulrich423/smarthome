@@ -18,11 +18,13 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
+import smarthome.request.SetPercentageRequest;
 import smarthome.request.TurnOffRequest;
 import smarthome.request.TurnOnRequest;
 import smarthome.request.UnspecifiedRequest;
 import smarthome.response.DiscoverAppliancesResponse;
 import smarthome.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
+import smarthome.response.SetPercentageConfirmation;
 import smarthome.response.TurnOffConfirmation;
 import smarthome.response.TurnOnConfirmation;
 import smarthome.response.TurnOnConfirmation.Payload;
@@ -48,6 +50,11 @@ public class SmartHomeController implements RequestStreamHandler {
       TurnOffRequest.Payload turnOffPayload = readValue(input, TurnOffRequest.class).getPayload();
       doTurnOff(turnOffPayload.getAppliance().getApplianceId(), outputStream);
       break;
+    case "SetPercentageRequest":
+      SetPercentageRequest.Payload setPercentagePayload = readValue(input, SetPercentageRequest.class).getPayload();
+      doSetPercentage(setPercentagePayload.getAppliance().getApplianceId(), setPercentagePayload.getPercentageState().getValue(),
+          outputStream);
+      break;
     }
   }
 
@@ -65,7 +72,7 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void doTurnOn(String applianceId, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
-        .map(SwitchAction::getOnAction)
+        .map(AbstractAction::getOnAction)
         .forEach(this::executeAction);
 
     TurnOnConfirmation turnOnConfirmation = new TurnOnConfirmation(new Payload());
@@ -74,11 +81,20 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void doTurnOff(String applianceId, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
-        .map(SwitchAction::getOffAction)
+        .map(AbstractAction::getOffAction)
         .forEach(this::executeAction);
 
     TurnOffConfirmation turnOffConfirmation = new TurnOffConfirmation(new TurnOffConfirmation.Payload());
     writeValue(output, turnOffConfirmation);
+  }
+
+  private void doSetPercentage(String applianceId, double value, OutputStream output) {
+    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
+        .map(a -> a.getSetPercentageAction(value))
+        .forEach(this::executeAction);
+
+    SetPercentageConfirmation setPercentageConfirmation = new SetPercentageConfirmation(new SetPercentageConfirmation.Payload());
+    writeValue(output, setPercentageConfirmation);
   }
 
   private void executeAction(Action action) {
