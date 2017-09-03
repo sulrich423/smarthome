@@ -26,6 +26,7 @@ public class ServiceCall {
     HARMONY_COMMAND, //
     HARMONY_ACTIVITY_ON, //
     HARMONY_ACTIVITY_OFF, //
+    HARMONY_ACTIVITY_ON_OFF, //
     MOVE, //
     HOMEMATIC;
 

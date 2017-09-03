@@ -19,6 +19,9 @@ public class Devices {
   public static final DiscoveredAppliances PLAYSTATION = new DiscoveredAppliances(SWITCH_ACTIONS, "playstation", "Playstation",
       "Playstation 4");
 
+  public static final DiscoveredAppliances SET_TOP_BOX = new DiscoveredAppliances(SWITCH_ACTIONS, "setTopBox", "Set top box",
+      "VU+ Set-top Box von Deep Standby in Standby versetzen");
+
   public static final DiscoveredAppliances BLIND_WINDOW = new DiscoveredAppliances(BLIND_ACTIONS, "blind_window",
       "Verdunklung Fenster", "Plissee Wohnzimmer");
 
