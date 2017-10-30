@@ -9,13 +9,13 @@ import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TurnOnRequest {
+public class AdjustPercentageRequest {
 
   @JsonProperty("directive")
   private Directive directive;
 
-  public Directive getDirective() {
-    return directive;
+  public AdjustPercentageRequest(Directive directive) {
+    this.directive = directive;
   }
 
   @JsonPropertyOrder(alphabetic = true)
@@ -31,20 +31,24 @@ public class TurnOnRequest {
     @JsonProperty("payload")
     private Payload payload;
 
-    public Header getHeader() {
-      return header;
-    }
-
-    public Endpoint getEndpoint() {
-      return endpoint;
+    public Directive(Header header, Endpoint endpoint, Payload payload) {
+      this.header = header;
+      this.endpoint = endpoint;
+      this.payload = payload;
     }
 
     @JsonPropertyOrder(alphabetic = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Payload {
 
+      @JsonProperty("percentageDelta")
+      private Integer percentageDelta;
+
+      public Payload(Integer percentageDelta) {
+        this.percentageDelta = percentageDelta;
+      }
+
     }
 
   }
-
 }

@@ -4,19 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import smarthome.alexa.Endpoint;
 import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TurnOnRequest {
+public class DiscoverRequest {
 
   @JsonProperty("directive")
   private Directive directive;
-
-  public Directive getDirective() {
-    return directive;
-  }
 
   @JsonPropertyOrder(alphabetic = true)
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -25,26 +20,28 @@ public class TurnOnRequest {
     @JsonProperty("header")
     private Header header;
 
-    @JsonProperty("endpoint")
-    private Endpoint endpoint;
-
     @JsonProperty("payload")
     private Payload payload;
-
-    public Header getHeader() {
-      return header;
-    }
-
-    public Endpoint getEndpoint() {
-      return endpoint;
-    }
 
     @JsonPropertyOrder(alphabetic = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Payload {
 
-    }
+      @JsonProperty("scope")
+      private Scope scope;
 
+      @JsonPropertyOrder(alphabetic = true)
+      @JsonIgnoreProperties(ignoreUnknown = true)
+      public static class Scope {
+
+        @JsonProperty("type")
+        private String type;
+
+        @JsonProperty("token")
+        private String token;
+
+      }
+    }
   }
 
 }

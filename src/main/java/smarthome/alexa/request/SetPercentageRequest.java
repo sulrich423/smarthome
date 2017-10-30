@@ -4,87 +4,58 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import smarthome.alexa.Endpoint;
 import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SetPercentageRequest {
 
-  @JsonProperty("header")
-  private Header header;
+  @JsonProperty("directive")
+  private Directive directive;
 
-  @JsonProperty("payload")
-  private Payload payload;
-
-  public Header getHeader() {
-    return header;
-  }
-
-  public Payload getPayload() {
-    return payload;
+  public Directive getDirective() {
+    return directive;
   }
 
   @JsonPropertyOrder(alphabetic = true)
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class Payload {
+  public static class Directive {
 
-    @JsonProperty("accessToken")
-    private String accessToken;
+    @JsonProperty("header")
+    private Header header;
 
-    @JsonProperty("appliance")
-    private Appliance appliance;
+    @JsonProperty("endpoint")
+    private Endpoint endpoint;
 
-    @JsonProperty("percentageState")
-    private PercentageState percentageState;
+    @JsonProperty("payload")
+    private Payload payload;
 
-    public String getAccessToken() {
-      return accessToken;
+    public Header getHeader() {
+      return header;
     }
 
-    public Appliance getAppliance() {
-      return appliance;
+    public Endpoint getEndpoint() {
+      return endpoint;
     }
 
-    public PercentageState getPercentageState() {
-      return percentageState;
-    }
-
-    @JsonPropertyOrder(alphabetic = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Appliance {
-
-      @JsonProperty("additionalApplianceDetails")
-      private AdditionalApplianceDetails additionalApplianceDetails;
-
-      @JsonProperty("applianceId")
-      private String applianceId;
-
-      public AdditionalApplianceDetails getAdditionalApplianceDetails() {
-        return additionalApplianceDetails;
-      }
-
-      public String getApplianceId() {
-        return applianceId;
-      }
-
-      @JsonPropertyOrder(alphabetic = true)
-      @JsonIgnoreProperties(ignoreUnknown = true)
-      public static class AdditionalApplianceDetails {
-
-      }
+    public Payload getPayload() {
+      return payload;
     }
 
     @JsonPropertyOrder(alphabetic = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class PercentageState {
+    public static class Payload {
 
-      @JsonProperty("value")
-      private double value;
+      @JsonProperty("percentage")
+      private Integer percentage;
 
-      public double getValue() {
-        return value;
+      public Integer getPercentage() {
+        return percentage;
       }
+
     }
+
   }
 
 }

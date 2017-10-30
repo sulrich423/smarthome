@@ -10,11 +10,23 @@ import smarthome.alexa.Header;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UnspecifiedRequest {
 
-  @JsonProperty("header")
-  private Header header;
+  @JsonProperty("directive")
+  private Directive directive;
 
-  public Header getHeader() {
-    return header;
+  public Directive getDirective() {
+    return directive;
   }
 
+  @JsonPropertyOrder(alphabetic = true)
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Directive {
+
+    @JsonProperty("header")
+    private Header header;
+
+    public Header getHeader() {
+      return header;
+    }
+
+  }
 }

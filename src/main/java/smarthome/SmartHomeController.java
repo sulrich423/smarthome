@@ -22,12 +22,11 @@ import smarthome.alexa.request.SetPercentageRequest;
 import smarthome.alexa.request.TurnOffRequest;
 import smarthome.alexa.request.TurnOnRequest;
 import smarthome.alexa.request.UnspecifiedRequest;
-import smarthome.alexa.response.DiscoverAppliancesResponse;
-import smarthome.alexa.response.SetPercentageConfirmation;
-import smarthome.alexa.response.TurnOffConfirmation;
-import smarthome.alexa.response.TurnOnConfirmation;
-import smarthome.alexa.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
-import smarthome.alexa.response.TurnOnConfirmation.Payload;
+import smarthome.alexa.response.DiscoverResponse;
+import smarthome.alexa.response.DiscoverResponse.Event.Payload.Endpoints;
+import smarthome.alexa.response.PercentageResponse;
+import smarthome.alexa.response.TurnOffResponse;
+import smarthome.alexa.response.TurnOnResponse;
 import smarthome.service.ServiceCall;
 import smarthome.service.action.Action;
 
@@ -41,20 +40,24 @@ public class SmartHomeController implements RequestStreamHandler {
     String requestType = determineRequestType(input);
     System.out.println("requestType: " + requestType);
     switch (requestType) {
-    case "DiscoverAppliancesRequest":
+    case "Discover":
       doDiscoverAppliancesResponse(outputStream);
       break;
-    case "TurnOnRequest":
-      TurnOnRequest.Payload turnOnPayload = readValue(input, TurnOnRequest.class).getPayload();
-      doTurnOn(turnOnPayload.getAppliance().getApplianceId(), outputStream);
+    case "TurnOn":
+      TurnOnRequest turnOnRequest = readValue(input, TurnOnRequest.class);
+      doTurnOn(turnOnRequest.getDirective().getEndpoint().getEndpointId(),
+          turnOnRequest.getDirective().getHeader().getCorrelationToken(), outputStream);
       break;
-    case "TurnOffRequest":
-      TurnOffRequest.Payload turnOffPayload = readValue(input, TurnOffRequest.class).getPayload();
-      doTurnOff(turnOffPayload.getAppliance().getApplianceId(), outputStream);
+    case "TurnOff":
+      TurnOffRequest turnOffRequest = readValue(input, TurnOffRequest.class);
+      doTurnOff(turnOffRequest.getDirective().getEndpoint().getEndpointId(),
+          turnOffRequest.getDirective().getHeader().getCorrelationToken(), outputStream);
       break;
-    case "SetPercentageRequest":
-      SetPercentageRequest.Payload setPercentagePayload = readValue(input, SetPercentageRequest.class).getPayload();
-      doSetPercentage(setPercentagePayload.getAppliance().getApplianceId(), setPercentagePayload.getPercentageState().getValue(),
+    case "SetPercentage":
+      SetPercentageRequest setPercentageRequest = readValue(input, SetPercentageRequest.class);
+      doSetPercentage(setPercentageRequest.getDirective().getEndpoint().getEndpointId(),
+          setPercentageRequest.getDirective().getHeader().getCorrelationToken(),
+          setPercentageRequest.getDirective().getPayload().getPercentage(),
           outputStream);
       break;
     }
@@ -62,40 +65,41 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private String determineRequestType(String input) {
     UnspecifiedRequest request = readValue(input, UnspecifiedRequest.class);
-    return request.getHeader().getName();
+
+    return request.getDirective().getHeader().getName();
   }
 
   private void doDiscoverAppliancesResponse(OutputStream output) {
-    List<DiscoveredAppliances> discoveredAppliances = Configuration.DISCOVERABLE_DEVICES;
-    DiscoverAppliancesResponse.Payload payload = new DiscoverAppliancesResponse.Payload(discoveredAppliances);
-    DiscoverAppliancesResponse response = new DiscoverAppliancesResponse(payload);
+    List<Endpoints> discoveredAppliances = Configuration.DISCOVERABLE_DEVICES;
+    DiscoverResponse.Event.Payload payload = new DiscoverResponse.Event.Payload(discoveredAppliances);
+    DiscoverResponse response = new DiscoverResponse(payload);
     writeValue(output, response);
   }
 
-  private void doTurnOn(String applianceId, OutputStream output) {
-    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
+  private void doTurnOn(String endpointId, String correlationToken, OutputStream output) {
+    Configuration.DEVICE_ACTION_MAPPING.get(endpointId).parallelStream()
         .map(Action::getOnCall)
         .forEach(this::executeAction);
 
-    TurnOnConfirmation turnOnConfirmation = new TurnOnConfirmation(new Payload());
-    writeValue(output, turnOnConfirmation);
+    TurnOnResponse turnOnResponse = new TurnOnResponse(correlationToken, endpointId);
+    writeValue(output, turnOnResponse);
   }
 
-  private void doTurnOff(String applianceId, OutputStream output) {
-    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
+  private void doTurnOff(String endpointId, String correlationToken, OutputStream output) {
+    Configuration.DEVICE_ACTION_MAPPING.get(endpointId).parallelStream()
         .map(Action::getOffCall)
         .forEach(this::executeAction);
 
-    TurnOffConfirmation turnOffConfirmation = new TurnOffConfirmation(new TurnOffConfirmation.Payload());
-    writeValue(output, turnOffConfirmation);
+    TurnOffResponse turnOffResponse = new TurnOffResponse(correlationToken, endpointId);
+    writeValue(output, turnOffResponse);
   }
 
-  private void doSetPercentage(String applianceId, double value, OutputStream output) {
-    Configuration.DEVICE_ACTION_MAPPING.get(applianceId).parallelStream()
+  private void doSetPercentage(String endpointId, String correlationToken, Integer value, OutputStream output) {
+    Configuration.DEVICE_ACTION_MAPPING.get(endpointId).parallelStream()
         .map(a -> a.getSetPercentageCall(value))
         .forEach(this::executeAction);
 
-    SetPercentageConfirmation setPercentageConfirmation = new SetPercentageConfirmation(new SetPercentageConfirmation.Payload());
+    PercentageResponse setPercentageConfirmation = new PercentageResponse(correlationToken, endpointId, value);
     writeValue(output, setPercentageConfirmation);
   }
 

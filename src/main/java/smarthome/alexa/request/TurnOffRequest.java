@@ -4,68 +4,47 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import smarthome.alexa.Endpoint;
 import smarthome.alexa.Header;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TurnOffRequest {
 
-  @JsonProperty("header")
-  private Header header;
+  @JsonProperty("directive")
+  private Directive directive;
 
-  @JsonProperty("payload")
-  private Payload payload;
-
-  public Header getHeader() {
-    return header;
-  }
-
-  public Payload getPayload() {
-    return payload;
+  public Directive getDirective() {
+    return directive;
   }
 
   @JsonPropertyOrder(alphabetic = true)
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class Payload {
+  public static class Directive {
 
-    @JsonProperty("accessToken")
-    private String accessToken;
+    @JsonProperty("header")
+    private Header header;
 
-    @JsonProperty("appliance")
-    private Appliance appliance;
+    @JsonProperty("endpoint")
+    private Endpoint endpoint;
 
-    public String getAccessToken() {
-      return accessToken;
+    @JsonProperty("payload")
+    private Payload payload;
+
+    public Header getHeader() {
+      return header;
     }
 
-    public Appliance getAppliance() {
-      return appliance;
+    public Endpoint getEndpoint() {
+      return endpoint;
     }
 
     @JsonPropertyOrder(alphabetic = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Appliance {
+    public static class Payload {
 
-      @JsonProperty("additionalApplianceDetails")
-      private AdditionalApplianceDetails additionalApplianceDetails;
-
-      @JsonProperty("applianceId")
-      private String applianceId;
-
-      public AdditionalApplianceDetails getAdditionalApplianceDetails() {
-        return additionalApplianceDetails;
-      }
-
-      public String getApplianceId() {
-        return applianceId;
-      }
-
-      @JsonPropertyOrder(alphabetic = true)
-      @JsonIgnoreProperties(ignoreUnknown = true)
-      public static class AdditionalApplianceDetails {
-
-      }
     }
+
   }
 
 }

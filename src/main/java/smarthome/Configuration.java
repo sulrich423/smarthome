@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import smarthome.alexa.Devices;
-import smarthome.alexa.response.DiscoverAppliancesResponse.Payload.DiscoveredAppliances;
+import smarthome.alexa.response.DiscoverResponse.Event.Payload.Endpoints;
 import smarthome.service.action.Action;
 import smarthome.service.action.BlindAction;
 import smarthome.service.action.SwitchAction;
@@ -18,7 +18,7 @@ public class Configuration {
   public static final String USERNAME = "xxx";
   public static final String PASSWORD = "xxx";
 
-  public static final List<DiscoveredAppliances> DISCOVERABLE_DEVICES = Lists.newArrayList(
+  public static final List<Endpoints> DISCOVERABLE_DEVICES = Lists.newArrayList(
       Devices.LIGHT,
       Devices.TV_LIGHT,
       Devices.PLAYSTATION,
@@ -39,8 +39,8 @@ public class Configuration {
 
     private Map<String, List<Action>> result = Maps.newHashMap();
 
-    private DeviceActionMappingBuilder put(DiscoveredAppliances device, Action... actions) {
-      result.put(device.getApplianceId(), Lists.newArrayList(actions));
+    private DeviceActionMappingBuilder put(Endpoints device, Action... actions) {
+      result.put(device.getEndpointId(), Lists.newArrayList(actions));
       return this;
     }
 

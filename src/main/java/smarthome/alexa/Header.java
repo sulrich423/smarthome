@@ -20,21 +20,22 @@ public class Header {
   @JsonProperty("payloadVersion")
   private String payloadVersion;
 
+  @JsonProperty("correlationToken")
+  private String correlationToken;
+
   public Header() {
   }
 
-  public Header(String messageId, String name, String namespace, String payloadVersion) {
-    this.messageId = messageId;
-    this.name = name;
-    this.namespace = namespace;
-    this.payloadVersion = payloadVersion;
-  }
-
-  public Header(String name, String namespace) {
+  public Header(String name, String namespace, String correlationToken) {
     this.messageId = UUID.randomUUID().toString();
     this.name = name;
     this.namespace = namespace;
-    this.payloadVersion = "2";
+    this.payloadVersion = "3";
+    this.correlationToken = correlationToken;
+  }
+
+  public Header(String name, String namespace) {
+    this(name, namespace, null);
   }
 
   public String getMessageId() {
@@ -51,6 +52,10 @@ public class Header {
 
   public String getPayloadVersion() {
     return payloadVersion;
+  }
+
+  public String getCorrelationToken() {
+    return correlationToken;
   }
 
 }
