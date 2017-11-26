@@ -28,7 +28,8 @@ public class ServiceCall {
     HARMONY_ACTIVITY_OFF, //
     HARMONY_ACTIVITY_ON_OFF, //
     MOVE, //
-    HOMEMATIC;
+    HOMEMATIC, //
+    VU_PLUS_OFF;
 
     @Override
     public String toString() {

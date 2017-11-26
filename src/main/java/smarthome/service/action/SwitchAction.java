@@ -25,7 +25,7 @@ public class SwitchAction implements Action {
 
   public static final SwitchAction SET_TOP_BOX = new SwitchAction(
       new ServiceCall(CgiScript.HARMONY_ACTIVITY_ON_OFF, HarmonyPayloads.SET_TOP_BOX_ON),
-      new ServiceCall(CgiScript.HARMONY_ACTIVITY_OFF, null));
+      new ServiceCall(CgiScript.VU_PLUS_OFF, null));
 
   private final ServiceCall onCall;
   private final ServiceCall offCall;
