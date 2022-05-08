@@ -18,13 +18,17 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
-import smarthome.alexa.request.SetPercentageRequest;
+import smarthome.alexa.DirectiveName;
+import smarthome.alexa.request.AdjustRangeValueRequest;
+import smarthome.alexa.request.ReportStateRequest;
+import smarthome.alexa.request.SetRangeValueRequest;
 import smarthome.alexa.request.TurnOffRequest;
 import smarthome.alexa.request.TurnOnRequest;
 import smarthome.alexa.request.UnspecifiedRequest;
 import smarthome.alexa.response.DiscoverResponse;
-import smarthome.alexa.response.DiscoverResponse.Event.Payload.Endpoints;
-import smarthome.alexa.response.PercentageResponse;
+import smarthome.alexa.response.DiscoverResponse.Event.Payload.Endpoint;
+import smarthome.alexa.response.RangeValueResponse;
+import smarthome.alexa.response.ReportStateResponse;
 import smarthome.alexa.response.TurnOffResponse;
 import smarthome.alexa.response.TurnOnResponse;
 import smarthome.service.ServiceCall;
@@ -37,40 +41,53 @@ public class SmartHomeController implements RequestStreamHandler {
   @Override
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
     String input = inputStreamToString(inputStream);
-    String requestType = determineRequestType(input);
+    DirectiveName requestType = determineRequestType(input);
     System.out.println("requestType: " + requestType);
     switch (requestType) {
-    case "Discover":
+    case DISCOVER:
       doDiscoverAppliancesResponse(outputStream);
       break;
-    case "TurnOn":
+    case TURN_ON:
       TurnOnRequest turnOnRequest = readValue(input, TurnOnRequest.class);
       doTurnOn(turnOnRequest.getDirective().getEndpoint().getEndpointId(),
           turnOnRequest.getDirective().getHeader().getCorrelationToken(), outputStream);
       break;
-    case "TurnOff":
+    case TURN_OFF:
       TurnOffRequest turnOffRequest = readValue(input, TurnOffRequest.class);
       doTurnOff(turnOffRequest.getDirective().getEndpoint().getEndpointId(),
           turnOffRequest.getDirective().getHeader().getCorrelationToken(), outputStream);
       break;
-    case "SetPercentage":
-      SetPercentageRequest setPercentageRequest = readValue(input, SetPercentageRequest.class);
-      doSetPercentage(setPercentageRequest.getDirective().getEndpoint().getEndpointId(),
-          setPercentageRequest.getDirective().getHeader().getCorrelationToken(),
-          setPercentageRequest.getDirective().getPayload().getPercentage(),
-          outputStream);
+    case SET_RANGE_VALUE:
+      SetRangeValueRequest setRangeValueRequest = readValue(input, SetRangeValueRequest.class);
+      doSetRangeValue(setRangeValueRequest.getDirective().getEndpoint().getEndpointId(),
+          setRangeValueRequest.getDirective().getHeader().getCorrelationToken(),
+          setRangeValueRequest.getDirective().getPayload().getRangeValue(), outputStream);
+      break;
+    case ADJUST_RANGE_VALUE:
+      AdjustRangeValueRequest adjustRangeValueRequest = readValue(input, AdjustRangeValueRequest.class);
+      doAdjustRangeValue(adjustRangeValueRequest.getDirective().getEndpoint().getEndpointId(),
+          adjustRangeValueRequest.getDirective().getHeader().getCorrelationToken(),
+          adjustRangeValueRequest.getDirective().getPayload().getRangeValueDelta(),
+          adjustRangeValueRequest.getDirective().getPayload().getRangeValueDeltaDefault(), outputStream);
+      break;
+    case REPORT_STATE:
+      ReportStateRequest reportStateRequest = readValue(input, ReportStateRequest.class);
+      doReportState(reportStateRequest.getDirective().getEndpoint().getEndpointId(),
+          reportStateRequest.getDirective().getHeader().getCorrelationToken(), outputStream);
+      break;
+    default:
       break;
     }
   }
 
-  private String determineRequestType(String input) {
+  private DirectiveName determineRequestType(String input) {
     UnspecifiedRequest request = readValue(input, UnspecifiedRequest.class);
 
     return request.getDirective().getHeader().getName();
   }
 
   private void doDiscoverAppliancesResponse(OutputStream output) {
-    List<Endpoints> discoveredAppliances = Configuration.DISCOVERABLE_DEVICES;
+    List<Endpoint> discoveredAppliances = Configuration.DISCOVERABLE_DEVICES;
     DiscoverResponse.Event.Payload payload = new DiscoverResponse.Event.Payload(discoveredAppliances);
     DiscoverResponse response = new DiscoverResponse(payload);
     writeValue(output, response);
@@ -94,13 +111,36 @@ public class SmartHomeController implements RequestStreamHandler {
     writeValue(output, turnOffResponse);
   }
 
-  private void doSetPercentage(String endpointId, String correlationToken, Integer value, OutputStream output) {
+  private void doSetRangeValue(String endpointId, String correlationToken, Integer value, OutputStream output) {
     Configuration.DEVICE_ACTION_MAPPING.get(endpointId).parallelStream()
-        .map(a -> a.getSetPercentageCall(value))
+        .map(action -> action.getSetRangeCall(value))
         .forEach(this::executeAction);
 
-    PercentageResponse setPercentageConfirmation = new PercentageResponse(correlationToken, endpointId, value);
-    writeValue(output, setPercentageConfirmation);
+    RangeValueResponse rangeValueResponse = new RangeValueResponse(correlationToken, endpointId, value);
+    writeValue(output, rangeValueResponse);
+  }
+
+  private void doAdjustRangeValue(String endpointId, String correlationToken, Integer delta,
+      Boolean rangeValueDeltaDefault, OutputStream output) {
+    Integer oldValue = Configuration.DEVICE_STATE_MAPPING.get(endpointId).requestState();
+
+    Configuration.DEVICE_ACTION_MAPPING.get(endpointId).parallelStream()
+        .map(action -> action.getAdjustRangeCall(oldValue, delta))
+        .forEach(this::executeAction);
+
+    Integer newValue = Configuration.DEVICE_STATE_MAPPING.get(endpointId).requestState();
+
+    RangeValueResponse rangeValueResponse = new RangeValueResponse(correlationToken, endpointId, newValue);
+    writeValue(output, rangeValueResponse);
+  }
+
+  private void doReportState(String endpointId, String correlationToken, OutputStream output) {
+    StateReport stateReport = Configuration.DEVICE_STATE_MAPPING.get(endpointId);
+    Integer value = stateReport.requestState();
+
+    ReportStateResponse reportStateResponse = new ReportStateResponse(correlationToken, endpointId, stateReport.getInstance(),
+        stateReport.getInterface(), stateReport.getRetrievableProperty(), value);
+    writeValue(output, reportStateResponse);
   }
 
   private void executeAction(ServiceCall action) {
@@ -123,6 +163,7 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private <T> T readValue(String input, Class<T> clazz) {
     try {
+      System.out.println(input);
       return mapper.readValue(input, clazz);
     } catch (IOException e) {
     }
@@ -131,6 +172,8 @@ public class SmartHomeController implements RequestStreamHandler {
 
   private void writeValue(OutputStream outputStream, Object response) {
     try {
+      String debug = mapper.writeValueAsString(response);
+      System.out.println(debug);
       mapper.writeValue(outputStream, response);
     } catch (IOException e) {
     }

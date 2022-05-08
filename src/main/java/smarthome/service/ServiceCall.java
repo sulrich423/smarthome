@@ -27,8 +27,8 @@ public class ServiceCall {
     HARMONY_ACTIVITY_ON, //
     HARMONY_ACTIVITY_OFF, //
     HARMONY_ACTIVITY_ON_OFF, //
-    MOVE, //
-    HOMEMATIC, //
+    HOMEMATIC_STATE, //
+    HOMEMATIC_STATECHANGE, //
     VU_PLUS_OFF;
 
     @Override

@@ -12,34 +12,37 @@ import com.google.common.collect.Lists;
 @JsonPropertyOrder(alphabetic = true)
 public class Context {
 
-  @JsonProperty("properties")
+  @JsonProperty
   private List<Property> properties;
 
-  public Context(String namespace, String name, String value) {
-    this.properties = Lists.newArrayList(new Property(namespace, name, value));
+  public Context(Interface namespace, PropertyName name, Instance instance, String value) {
+    this.properties = Lists.newArrayList(new Property(namespace, name, instance, value));
+  }
+
+  public Context(Interface namespace, PropertyName name, String value) {
+    this(namespace, name, null, value);
   }
 
   @JsonPropertyOrder(alphabetic = true)
   public static class Property {
 
-    @JsonProperty("namespace")
-    private String namespace;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("value")
+    @JsonProperty
+    private Interface namespace;
+    @JsonProperty
+    private PropertyName name;
+    @JsonProperty
+    private Instance instance;
+    @JsonProperty
     private String value;
-
-    @JsonProperty("timeOfSample")
+    @JsonProperty
     private String timeOfSample;
-
-    @JsonProperty("uncertaintyInMilliseconds")
+    @JsonProperty
     private Integer uncertaintyInMilliseconds;
 
-    public Property(String namespace, String name, String value) {
+    public Property(Interface namespace, PropertyName name, Instance instance, String value) {
       this.namespace = namespace;
       this.name = name;
+      this.instance = instance;
       this.value = value;
       this.timeOfSample = ZonedDateTime.now(Clock.systemUTC()).format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
       this.uncertaintyInMilliseconds = 0;

@@ -9,7 +9,7 @@ import smarthome.alexa.EmptyPayload;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TurnOnRequest {
+public class ReportStateRequest {
 
   @JsonProperty
   private Directive<EmptyPayload> directive;

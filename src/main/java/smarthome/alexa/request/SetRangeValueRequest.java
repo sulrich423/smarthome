@@ -9,28 +9,34 @@ import smarthome.alexa.Payload;
 
 @JsonPropertyOrder(alphabetic = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DiscoverRequest {
+public class SetRangeValueRequest {
 
   @JsonProperty
-  private Directive<DiscoverRequestPayload> directive;
+  private Directive<SetRangeValuePayload> directive;
+
+  public Directive<SetRangeValuePayload> getDirective() {
+    return directive;
+  }
 
   @JsonPropertyOrder(alphabetic = true)
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class DiscoverRequestPayload implements Payload {
+  public static class SetRangeValuePayload implements Payload {
 
     @JsonProperty
-    private Scope scope;
+    private Integer rangeValue;
 
-    @JsonPropertyOrder(alphabetic = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Scope {
-
-      @JsonProperty
-      private String type;
-      @JsonProperty
-      private String token;
+    public SetRangeValuePayload() {
 
     }
+
+    public SetRangeValuePayload(Integer rangeValue) {
+      this.rangeValue = rangeValue;
+    }
+
+    public Integer getRangeValue() {
+      return rangeValue;
+    }
+
   }
 
 }

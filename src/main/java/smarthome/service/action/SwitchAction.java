@@ -46,7 +46,12 @@ public class SwitchAction implements Action {
   }
 
   @Override
-  public ServiceCall getSetPercentageCall(double value) {
+  public ServiceCall getSetRangeCall(Integer value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ServiceCall getAdjustRangeCall(Integer oldValue, Integer delta) {
     throw new UnsupportedOperationException();
   }
 

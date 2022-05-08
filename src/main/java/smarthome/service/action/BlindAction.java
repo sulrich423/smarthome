@@ -1,47 +1,37 @@
 package smarthome.service.action;
 
 import smarthome.service.ServiceCall;
-import smarthome.service.ServiceCall.CgiScript;
-import smarthome.service.constants.HomematicPayloads;
-import smarthome.service.constants.MovePayloads;
-import smarthome.service.creator.HomematicSetPercentageCallCreator;
-import smarthome.service.creator.MoveSetPercentageCallCreator;
-import smarthome.service.creator.SetPercentageCallCreator;
+import smarthome.service.creator.HomematicPercentageConverter;
+import smarthome.service.creator.PercentageConverter;
 
 public class BlindAction implements Action {
 
   public static final BlindAction BLIND_PATIO = new BlindAction(
-      new ServiceCall(CgiScript.HOMEMATIC, HomematicPayloads.BLINDS_ON),
-      new ServiceCall(CgiScript.HOMEMATIC, HomematicPayloads.BLINDS_OFF),
-      new HomematicSetPercentageCallCreator());
+      new HomematicPercentageConverter());
 
-  public static final BlindAction BLIND_WINDOW = new BlindAction(
-      new ServiceCall(CgiScript.MOVE, MovePayloads.BLINDS_ON),
-      new ServiceCall(CgiScript.MOVE, MovePayloads.BLINDS_OFF),
-      new MoveSetPercentageCallCreator());
+  private final PercentageConverter percentageConverter;
 
-  private final ServiceCall onCall;
-  private final ServiceCall offCall;
-  private final SetPercentageCallCreator setPercentageCallCreator;
-
-  private BlindAction(ServiceCall onCall, ServiceCall offCall, SetPercentageCallCreator setPercentageCallCreator) {
-    this.onCall = onCall;
-    this.offCall = offCall;
-    this.setPercentageCallCreator = setPercentageCallCreator;
+  private BlindAction(PercentageConverter percentageConverter) {
+    this.percentageConverter = percentageConverter;
   }
 
   @Override
   public ServiceCall getOnCall() {
-    return onCall;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public ServiceCall getOffCall() {
-    return offCall;
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public ServiceCall getSetPercentageCall(double value) {
-    return setPercentageCallCreator.create(value);
+  public ServiceCall getSetRangeCall(Integer value) {
+    return percentageConverter.set(value);
+  }
+
+  @Override
+  public ServiceCall getAdjustRangeCall(Integer oldValue, Integer delta) {
+    return percentageConverter.adjust(oldValue, delta);
   }
 }

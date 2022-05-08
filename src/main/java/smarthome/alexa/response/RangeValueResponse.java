@@ -9,15 +9,15 @@ import smarthome.alexa.Interface;
 import smarthome.alexa.PropertyName;
 
 @JsonPropertyOrder(alphabetic = true)
-public class TurnOffResponse {
+public class RangeValueResponse {
 
   @JsonProperty
   private Context context;
   @JsonProperty
   private Event event;
 
-  public TurnOffResponse(String correlationToken, String endpointId) {
-    this.context = new Context(Interface.ALEXA_POWER_CONTROLLER, PropertyName.POWER_STATE, "OFF");
+  public RangeValueResponse(String correlationToken, String endpointId, Integer rangeValue) {
+    this.context = new Context(Interface.ALEXA_RANGE_CONTROLLER, PropertyName.RANGE_VALUE, rangeValue.toString());
     this.event = new Event(correlationToken, endpointId);
   }
 

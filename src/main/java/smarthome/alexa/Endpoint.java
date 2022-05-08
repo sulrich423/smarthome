@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Endpoint {
 
-  @JsonProperty("endpointId")
+  @JsonProperty
   private String endpointId;
 
   public Endpoint() {
@@ -26,10 +26,9 @@ public class Endpoint {
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Scope {
 
-    @JsonProperty("type")
+    @JsonProperty
     private String type;
-
-    @JsonProperty("token")
+    @JsonProperty
     private String token;
 
     public Scope() {

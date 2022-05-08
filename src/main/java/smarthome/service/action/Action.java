@@ -8,6 +8,8 @@ public interface Action {
 
   public ServiceCall getOffCall();
 
-  public ServiceCall getSetPercentageCall(double value);
+  public ServiceCall getSetRangeCall(Integer value);
+
+  public ServiceCall getAdjustRangeCall(Integer oldValue, Integer delta);
 
 }
