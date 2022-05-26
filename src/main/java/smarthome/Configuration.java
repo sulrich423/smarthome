@@ -23,7 +23,8 @@ public class Configuration {
       Devices.TV_LIGHT,
       Devices.PLAYSTATION,
       Devices.SET_TOP_BOX,
-      Devices.BLIND_PATIO);
+      Devices.BLIND_PATIO,
+      Devices.TAGESSCHAU);
 
   public static final Map<String, StateReport> DEVICE_STATE_MAPPING = new DeviceStateMappingBuilder()
       .put(Devices.BLIND_PATIO, StateReport.HOMEMATIC)
@@ -35,6 +36,7 @@ public class Configuration {
       .put(Devices.PLAYSTATION, SwitchAction.PLAYSTATION)
       .put(Devices.SET_TOP_BOX, SwitchAction.SET_TOP_BOX)
       .put(Devices.BLIND_PATIO, BlindAction.BLIND_PATIO)
+      .put(Devices.TAGESSCHAU, SwitchAction.TAGESSCHAU)
       .build();
 
   private static class DeviceActionMappingBuilder {

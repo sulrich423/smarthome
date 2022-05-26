@@ -50,6 +50,9 @@ public class Devices {
   public static final Endpoint PLAYSTATION = new Endpoint(SWITCH_ACTIONS, "playstation", "Playstation", "Playstation 5",
       Lists.newArrayList(DisplayCategory.GAME_CONSOLE));
 
+  public static final Endpoint TAGESSCHAU = new Endpoint(SWITCH_ACTIONS, "tagesschau", "Tagesschau", "Tagesschau abspielen",
+      Lists.newArrayList(DisplayCategory.OTHER));
+
   public static final Endpoint SET_TOP_BOX = new Endpoint(SWITCH_ACTIONS, "setTopBox", "Set top box",
       "VU+ Set-top Box von Deep Standby in Standby versetzen", Lists.newArrayList(DisplayCategory.STREAMING_DEVICE));
 

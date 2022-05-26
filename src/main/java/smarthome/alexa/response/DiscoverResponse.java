@@ -88,7 +88,8 @@ public class DiscoverResponse {
           INTERIOR_BLIND,
           STREAMING_DEVICE,
           GAME_CONSOLE,
-          LIGHT
+          LIGHT,
+          OTHER
         }
 
         @JsonPropertyOrder(alphabetic = true)

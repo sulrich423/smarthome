@@ -23,6 +23,10 @@ public class SwitchAction implements Action {
       new ServiceCall(CgiScript.HARMONY_ACTIVITY_ON, HarmonyPayloads.ACTIVITY_PLAYSTATION),
       new ServiceCall(CgiScript.HARMONY_ACTIVITY_OFF, null));
 
+  public static final SwitchAction TAGESSCHAU = new SwitchAction(
+      new ServiceCall(CgiScript.HARMONY_ACTIVITY_ON, HarmonyPayloads.ACTIVITY_TAGGESSCHAU),
+      new ServiceCall(CgiScript.HARMONY_ACTIVITY_OFF, null));
+
   public static final SwitchAction SET_TOP_BOX = new SwitchAction(
       new ServiceCall(CgiScript.HARMONY_ACTIVITY_ON_OFF, HarmonyPayloads.SET_TOP_BOX_ON),
       new ServiceCall(CgiScript.VU_PLUS_OFF, null));
